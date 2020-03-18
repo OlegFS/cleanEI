@@ -9,3 +9,4 @@ cd /home/$USER/nestml
 sudo python3 -m pip install -r requirements.txt
 sudo python3 setup.py install
 echo "export LD_LIBRARY_PATH=/home/$USER/.local/lib/" >> ~/.bashrc
+alias python=python3
