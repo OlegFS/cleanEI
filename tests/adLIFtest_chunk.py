@@ -4,13 +4,14 @@
 # %config InlineBackend.figure_format = 'png'
 import os
 
-os.chdir('/home/ovinogradov/Documents/tests')
+#os.chdir('/home/ovinogradov/Documents/tests')
 import numpy as np
 from scipy import stats
 import sys
-sys.path.insert(0,'/home/ovinogradov/Documents/adLIF_NEST')
+sys.path.insert(0,'../../cleanEI')
 
 from func.helpers import get_hash
+from func.helpers import read_gdf
 from func.network import *
 # from func_.helpers import *
 #import seaborn as sns|
@@ -19,17 +20,17 @@ na = np.array
 # plt.style.use('dark_background')
 
 # %
+epsilon = 0.2
 N= 1000
 NI = np.int(N*epsilon)
 NE = N-NI
 g = 4.#NE/NI
 KE = 0.5490304776651601*((NE*0.14159415833146138)+32.43607416673515)
-
 nest.set_verbosity('M_FATAL')
 params= {'J': 2.0,#10.0,
  'g': 4.0,
  'N': 1000,
- 'epsilon': 0.8,
+ 'epsilon': epsilon,
  'eta': 0.0,
  'p_rate':800.,#np.random.uniform(2070,2080,1)[0],#2077.4792278063533,
  'J_ext': 1.,#3.820498723458609,
@@ -64,11 +65,11 @@ A.run()
 # %%
 name = get_hash(params)
 st,gid = read_gdf('sim/ABC_small/',name,(5000,params['simtime']),threads = params['threads'])
-
+print('Firing Rate is: ',len(st)/500000/200)
 # %%
-plt.figure()
-plt.plot(st,gid,'.', markersize = 0.8)
-plt.show()
+#plt.figure()
+#plt.plot(st,gid,'.', markersize = 0.8)
+#plt.show()
 #plt.savefig('foo.png', bbox_inches='tight')
 #print(st[1:20])
 #print('done')
