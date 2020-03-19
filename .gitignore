@@ -65,7 +65,7 @@ DOCS/TALKS
 test
 *.csv
 *.xls
-*.txt
+#*.txt
 #video
 *.mp4
 *.npy
