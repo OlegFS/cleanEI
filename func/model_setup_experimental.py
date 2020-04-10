@@ -1,14 +1,13 @@
 #WORKING VERSTION OF THE ABC MODEL 25.02.19
-from func_.simple_abc_truncatedGaus import Model, basic_abc, pmc_abc
+from func.simple_abc_truncatedGaus import Model, basic_abc, pmc_abc
 import numpy as np
 from scipy import stats
 import sys
-sys.path.insert(0,'../adLIF_NEST/')
 from func.helpers import *
 from func.network import *
 na = np.array
 # plt.style.use('ggplot')
-from func_.helpers import *
+from func.ABChelpers import *
 import sys
 import pandas as pd
 

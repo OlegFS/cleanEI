@@ -8,7 +8,7 @@ import os
 import numpy as np
 from scipy import stats
 import sys
-sys.path.insert(0,'../../cleanEI')
+sys.path.insert(0,'/home/ubuntu/cleanEI')
 
 from func.helpers import get_hash
 from func.helpers import read_gdf
@@ -26,7 +26,7 @@ NI = np.int(N*epsilon)
 NE = N-NI
 g = 4.#NE/NI
 KE = 0.5490304776651601*((NE*0.14159415833146138)+32.43607416673515)
-nest.set_verbosity('M_FATAL')
+nest.set_verbosity('M_WARNING')
 params= {'J': 2.0,#10.0,
  'g': 4.0,
  'N': 1000,
@@ -55,7 +55,7 @@ params= {'J': 2.0,#10.0,
  'simtime': 500500.0,
  'master_seed': 1000,
  'dt': 0.5,
- 'threads': 20}
+ 'threads': 18}
 
  # %%
 A = adLIFNet(params)

@@ -2,11 +2,10 @@
 import numpy as np
 from scipy import stats
 import sys
-sys.path.insert(0,'../adLIF_NEST/')
-sys.path.insert(0,'../ABC_bursting/')
 from func.helpers import *
 from func.network import *
-from func_.model_setup_experimental import *
+from func.model_setup_experimental import *
+from func.ABChelpers import *
 na = np.array
 import pandas as pd
 
@@ -48,13 +47,13 @@ params= {'J': 2.0,#10.0,
  'simtime': 500500.0,
  'master_seed': 1000,
  'dt': 0.5,
- 'threads': 20}
+ 'threads': 18}
 
 # Original data
 origEps2 = [0.05, 0.1, 0.2, 0.25, 0.3, 0.5, 0.7, 0.8, 0.95]
-IBIs = pd.read_excel('../ABC_bursting/data/meanFeatures.xlsx','meanIBI')
-sdIBI = pd.read_excel('../ABC_bursting/data/meanFeatures.xlsx','SD')
-CVs = pd.read_excel('../ABC_bursting/data/meanFeatures.xlsx','meanCV')
+IBIs = pd.read_excel('data/meanFeatures.xlsx','meanIBI')
+sdIBI = pd.read_excel('data/meanFeatures.xlsx','SD')
+CVs = pd.read_excel('data/meanFeatures.xlsx','meanCV')
 DatamIBI =np.nanmean(IBIs,0)*1000
 DatamCV =np.nanmean(CVs,0)
 

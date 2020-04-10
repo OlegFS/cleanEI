@@ -26,7 +26,10 @@ sudo python3 -m pip install ipython\
 	wheel\
 	nose\
 	numba\
-	h5py
+	h5py\
+    xlrd\
+    colorama==0.3.9
+
 sudo apt-get install -y build-essential\
     cmake libltdl7-dev libreadline6-dev \
     libncurses5-dev libgsl0-dev libtool-bin\

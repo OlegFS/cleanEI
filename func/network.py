@@ -1,6 +1,6 @@
 import nest
 import os
-os.environ['LD_LIBRARY_PATH'] = '/home/ovinogradov/.local'
+os.environ['LD_LIBRARY_PATH'] = '/home/ubuntu/.local'
 nest.Install('myModels')
 
 import time
@@ -186,9 +186,7 @@ class adLIFNet(object):
             self.voltmeter = nest.Create("multimeter")
         #self.ispikes  = nest.Create("spike_detector")
         self.nodes_al = self.nodes_ex +self.nodes_in
-        nest.SetStatus(self.espikes,[{
-                                #i"label": self.simulation,
-                                 "withtime": True,
+        nest.SetStatus(self.espikes,[{"withtime": True,
                                  "withgid": True,#%(n_i_),
                                  "to_file": True}])
             
