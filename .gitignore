@@ -194,3 +194,5 @@ venv.bak/
 #Pickle files
 #
 *.pkl
+#
+/CMakeFiles

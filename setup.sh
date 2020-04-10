@@ -44,7 +44,6 @@ make -j 18
 make install
 sudo echo "source /home/$USER/.local/bin/nest_vars.sh" >> ~/.bashrc
 sudo echo "export LD_LIBRARY_PATH=/home/$USER/.local/lib/" >> ~/.bashrc
-
 #Install MyModel (adLIF)
 cd /home/$USER/cleanEI/nestmodels/
 cmake -Dwith-nest=/home/$USER/.local/bin/nest-config .
