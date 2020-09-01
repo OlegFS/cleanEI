@@ -116,6 +116,10 @@ class adLIFNet(object):
         self.p_rate = params['p_rate']
         self.eta = params['eta']
         self.J_ext = params['J_ext']
+        if params['constantI']:
+            self.constantI=params['constantI']
+        else:
+            self.constantI=0.
         #Some statistics
         self.in_deg_saved = False
         self.out_deg_saved = False
@@ -145,6 +149,7 @@ class adLIFNet(object):
                               'tau_m':self.tauMem,
                               't_ref':self.t_ref,
                               'E_L': 0.0,
+                              'I_e':self.constantI,
                               'V_reset': self.V_res,
                               'V_abs': self.V_m,
                               'Theta':self.theta,
@@ -200,7 +205,7 @@ class adLIFNet(object):
                                      "withtime": True,
                                      "withgid": True,#%(n_i_),
                                      "to_file": True,
-                                      "to_memory":False}])
+                                      "to_memory":True}])
 
         self.built = True
     def connect(self):
@@ -226,7 +231,7 @@ class adLIFNet(object):
 
         nest.Connect(self.nodes_al[:self.N_rec],self.espikes, syn_spec=self.syn_dict)
         if self.record_vol:
-            nest.Connect(self.voltmeter, self.nodes_al[1:100])#self.N_rec
+            nest.Connect(self.voltmeter, self.nodes_al[:self.N_rec])#self.N_rec
 #         print("Connecting network")
 
 #         print("Excitatory connections")
@@ -239,14 +244,14 @@ class adLIFNet(object):
         nest.Connect(self.nodes_in, self.nodes_ex+self.nodes_in,
                      self.conn_params_in, syn_spec =self.syn_dict_in)
 
-    def run(self,stim=0,stim_eta = 0.5,stim_tim = 5000,n_trials = 1):
+    def run(self,stim=0,stim_rate = 0.5,stim_tim = 5000,n_trials = 1):
         """run the simulation
         Chunk - to prevent from running unnecessary
         stim - with extra Poiss inoput"""
 #         print("Simulating")
         # Simulate in chunk and check a special condition in between
         # Thus we avoid unwanted condition
-        if self.chunk:
+        if self.chunk and stim!=1:
             nest.Prepare()
             self.chunk_times = np.arange(0,self.simtime+1,self.chunk_size)[1::]
             if len(self.chunk_times) != int(self.simtime/self.chunk_size):
@@ -264,16 +269,15 @@ class adLIFNet(object):
             nest.Cleanup()
 
         elif stim==1:
+
             self.nu_th= self.theta / (self.J * self.KE * self.tauMem)## (theta * CMem) / (J_ex * CE * exp(1) * tauMem * tauSyn)
-            self.new_nu_ex = stim_eta * self.nu_th
-            self.new_p_rate = 1000.0 * self.new_nu_ex  * self.K
-            
-            
+            #self.new_nu_ex = stim_eta * self.nu_th
+            self.new_p_rate = stim_rate
             self.add_noise    = nest.Create("poisson_generator")
             nest.Simulate(self.simtime)
             nest.SetStatus(self.add_noise,{"rate":self.new_p_rate})
             nest.Connect(self.add_noise,self.nodes_ex[:100], syn_spec=self.syn_dict)
-            nest.Connect(self.add_noise,self.nodes_in[:100], syn_spec=self.syn_dict)
+            #nest.Connect(self.add_noise,self.nodes_in[:100], syn_spec=self.syn_dict)
             for trial in range(n_trials):   
                 nest.SetStatus(self.add_noise,{"rate":self.new_p_rate})
                 nest.Simulate(stim_tim)
@@ -291,7 +295,6 @@ class adLIFNet(object):
 
             self.rate_ex   = self.events_ex/self.simtime*1000.0/self.N_rec
             #self.rate_in   = self.events_in/self.simtime*1000.0/self.N_rec
-
 
             self.num_synapses = (nest.GetDefaults("excitatory")["num_connections"] +
                            nest.GetDefaults("inhibitory")["num_connections"]+ 
