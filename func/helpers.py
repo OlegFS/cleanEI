@@ -114,20 +114,32 @@ def read_gdf(mypath,simulation,t,threads=4, dirType='new'):
         #print(mypath+simulation)
         files = [mypath+simulation+'/'+i for i in listdir(mypath+simulation) if
                  'gdf' in i]
-
+    if not files:
+        files = [mypath+simulation+'/'+i for i in listdir(mypath+simulation) if
+                 'dat' in i]
+        new_format = True
         #print('Simulations: %s'% simulation)
         #print('Reading from %s files'%len(files))
     if len(files)>threads:
         print(len(files))
         raise SizeError()
-    data = from_file_pandas(files,t2)
+#     print(files)
+#     data = from_file_pandas(files,t2)
+    if new_format:
+        data = from_file_pandas_(files,t2,head = 2)
+#         print(data)
+    else:
+        data = from_file_pandas_(files,t2)
 
+#     return data
+#         ts,gids = data[3:,1],data[3:,0]#ignore the new headers
     ts,gids = data[:,1],data[:,0]
     ts1 = ts[(ts>t1)*(ts<t2)]
     gids1 = gids[(ts>t1)*(ts<t2)]
     return ts1,gids1
 
-def from_file_pandas(fname,t2, **kwargs):
+
+def from_file_pandas_(fname,t2,head=None, **kwargs):
     """Use pandas to read gdf file.
     This function is copied from NEST"""
     data = None
@@ -135,10 +147,10 @@ def from_file_pandas(fname,t2, **kwargs):
         try:
             dataFrame = pandas.read_csv(
                 f, sep='\s+', lineterminator='\n',
-                header=None, index_col=None,
+                header=head, index_col=None,
                 skipinitialspace=True)#,nrows = t2)
             newdata = dataFrame.values
-            newdata = dataFrame.values
+#             newdata = dataFrame.values
         except:
             continue
 
@@ -147,6 +159,8 @@ def from_file_pandas(fname,t2, **kwargs):
         else:
             data = np.concatenate((data, newdata))
     return data
+
+
 
 def load_ts(simulation,t,inhibitory = False):
     """ Loads either npy or hdf5 simulation
